@@ -76,6 +76,54 @@ for i in range(1, len(dictJugadores)):
             dictJugadores[j][0].append(carta)
             mazo.remove(carta)
             dictJugadores[j][7] += 1
+            dictJugadores[j][4] += dictJugadores[j][0][dictJugadores[j][7] -1][2]
 
-#falta la banca
-print(dictJugadores)
+# Aqui repartimos la carta a la banca
+for i in dictJugadores.keys():
+    if dictJugadores[i][3] == 0:
+            carta = random.choice(mazo)
+            dictJugadores[i][0].append(carta)
+            mazo.remove(carta)
+            dictJugadores[i][7] += 1
+            dictJugadores[i][4] += dictJugadores[i][0][dictJugadores[i][7] -1][2]
+
+# Seleccionamos el jugador por el orden que tenemos en la lista, la banca se deja para el final.
+
+for i in listaJugadores:
+    if dictJugadores[i][3] != 0 and dictJugadores[i][1] == "jugando":
+        print("Turno del jugador" + str(dictJugadores[i][3]))
+        
+        
+        # Enseñamos todas las cartas y puntos de cada jugador
+        for i in dictJugadores.keys():
+            print("cartas de jugador", dictJugadores[i][0])
+            print("puntos de jugador", dictJugadores[i][4])
+        
+        flagPlantarse = False
+        
+        # Hacemos un menú para que el jugador decida que quiere hacer enseñandole sus cartas cada vez que roba.
+        
+        while not flagPlantarse:
+            print(dictJugadores[i])
+            
+            for j in dictJugadores[i][0]:
+                print("Tus cartas son: " + str(j[0]) + " de " + str(j[1]))
+                
+            print("Que quieres hacer?\n    1.- Robar carta\n    2.- Plantarte")
+            
+            plantarse = int(input("Elige el número de la opción que quieras seleccionar: "))
+            
+            # Si decide robar le añadiremos la carta a su lista de cartas y la eliminaremos del mazo, actualizando los puntos y la cantidad de cartas en mano
+            if plantarse == 1:
+                carta = random.choice(mazo)
+                dictJugadores[i][0].append(carta)
+                mazo.remove(carta)
+                dictJugadores[i][7] += 1
+                dictJugadores[i][4] += dictJugadores[i][0][dictJugadores[i][7] -1][2]
+                
+            elif plantarse == 2:
+                dictJugadores[i][1] == "plantado"
+                flagPlantarse = True
+                
+            else:
+                print("ERROR: Opción no válida.")
