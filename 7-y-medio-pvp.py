@@ -29,13 +29,16 @@ flagCantidadJugadores = False
 while not flagCantidadJugadores:
     cantidadJugadores = int(input("¿Cuantos jugadores váis a jugar? (mínimo 2, máximo 8): "))
     
-    if cantidadJugadores > 8 or cantidadJugadores < 2:
-        print("ERROR: Elige una cantidad entre 2 y 8.")
+    if cantidadJugadores == 1:
+        print("\nERROR: ¿Que quieres jugar al solitario?\n")
+        
+    elif cantidadJugadores > 8 or cantidadJugadores < 2:
+        print("\nERROR: Elige una cantidad entre 2 y 8.\n")
     
     elif cantidadJugadores <= 8 and cantidadJugadores >= 2:
         flagCantidadJugadores = True
 
-print()
+print("\nLos nombres de los jugadores deben empezar por una letra y no contener espacios.\n")
 c = 0
 
 while len(listaJugadores) < cantidadJugadores: 
@@ -47,7 +50,7 @@ while len(listaJugadores) < cantidadJugadores:
         dictJugadores[nombreJugador] = [[], "jugando", "jugando", c, 0, 0, 20, 0] #lista de cartas, estado de la mano, estado de la partida, prioridad del jugador, puntos mano, puntos apostados, puntos restantes, mano
         c += 1
     else:
-        print("ERROR: Tu nombre no empieza por una letra o contiene espacios.")
+        print("\nERROR: Tu nombre no empieza por una letra o contiene espacios.\n")
 
 # Elegimos una carta aleatoria del mazo para ver cual va a ser el orden de jugadores
 
@@ -143,10 +146,28 @@ for i in listaJugadores:
                 
                 print()
                 print("".ljust(8) + "Puntos de la mano: ", dictJugadores[j][4])
+                print("".ljust(8) + "Puntos apostados: ", dictJugadores[j][5])
                 print()
             
             elif dictJugadores[j][1] == "eliminado":
                 print()
+        
+        # Una vez enseñadas las cartas le pedimos cuantos puntos quiere apostar
+        
+        flagPuntosApostados = False
+        
+        while not flagPuntosApostados:        
+            dictJugadores[i][5] = int(input("¿Cuántos puntos quieres apostar (tienes " + str(dictJugadores[i][6]) + " puntos restantes)? "))
+            
+            if dictJugadores[i][5] <= dictJugadores[i][6] and dictJugadores[i][5] > 0:
+                flagPuntosApostados = True
+            
+            elif dictJugadores[i][5] > dictJugadores[i][6]:
+                print("\nERROR: Has intentado apostar más puntos de los que tienes.\n")
+                
+            else:
+                print("\nERROR: Has introducido una apuesta no válida.\n")
+        print()
         
         flagPlantarse = False
         
@@ -173,10 +194,14 @@ for i in listaJugadores:
                 mazo.remove(carta)
                 dictJugadores[i][7] += 1
                 dictJugadores[i][4] += dictJugadores[i][0][dictJugadores[i][7] -1][2]
+                print()
+                print("".ljust(8) + "¡Jugador " + str(i) + " roba carta!\n")
                 
             elif plantarse == 2:
                 dictJugadores[i][1] = "plantado"
                 flagPlantarse = True
+                print()
+                print("".ljust(8) + "¡Jugador " + str(i) + " se planta!\n")
                 
             else:
                 print("ERROR: Opción no válida.")
@@ -186,10 +211,11 @@ for i in listaJugadores:
             if dictJugadores[i][4]> 7.5:
                 dictJugadores[i][1] = "eliminado"
                 flagPlantarse = True
+                print("".ljust(8) + "¡Jugador " + str(i) + " es eliminado porque tiene " + str(dictJugadores[i][4]) + " puntos!\n")
 
 # Ahora hacemos el turno de la banca
 
-print("\nTurno del jugador " + str(banca) + ":\n")
+print("\nTurno del jugador " + str(banca) + " (banca):\n")
         
         
 # Enseñamos todas las cartas y puntos de cada jugador
@@ -211,11 +237,12 @@ for j in dictJugadores.keys():
                 
         print()
         print("".ljust(8) + "Puntos de la mano: ", dictJugadores[j][4])
+        print("".ljust(8) + "Puntos apostados: ", dictJugadores[j][5])
         print()
             
     elif dictJugadores[j][1] == "eliminado":
         print()
-        
+
 flagPlantarse = False
         
 # Hacemos un menú para que el jugador decida que quiere hacer enseñandole sus cartas cada vez que roba.
@@ -241,10 +268,14 @@ while not flagPlantarse:
         mazo.remove(carta)
         dictJugadores[banca][7] += 1
         dictJugadores[banca][4] += dictJugadores[banca][0][dictJugadores[banca][7] -1][2]
+        print()
+        print("".ljust(8) + "¡La banca (Jugador" + str(i) + ") roba carta!\n")
                 
     elif plantarse == 2:
         dictJugadores[banca][1] = "plantado"
         flagPlantarse = True
+        print()
+        print("".ljust(8) + "¡La banca (Jugador " + str(i) + ") se planta!\n")
                 
     else:
         print("ERROR: Opción no válida.")
@@ -254,13 +285,35 @@ while not flagPlantarse:
     if dictJugadores[banca][4] >= 7.5:
         flagPlantarse = True
 
+print(dictJugadores)
+
 # Una vez acabada la ronda procedemos al reparto de puntos
-
+#los puntos apostados aun no estan restados de cada jugador
+dictJugadores[banca][4] = 7.5
 if dictJugadores[banca][4] == 7.5:
-    print("Todos los jugadores a pagar")
+    mensajeFinRonda = "* ¡La banca gana esta ronda! *"
+    for i in range(len(mensajeFinRonda)):
+        print("*", end="")
+    print()
 
+    print(mensajeFinRonda)
+
+    for i in range(len(mensajeFinRonda)):
+        print("*", end="")
+    print()
+
+    dictJugadores[banca][6] = 0
+    
+    for i in dictJugadores.keys():
+        if i != banca:
+            dictJugadores[banca][6] += dictJugadores[i][5]
+            dictJugadores[i][6] -= dictJugadores[i][5]
+            dictJugadores[i][5]= 0        
+    
 elif dictJugadores[banca][4] > 7.5:
     print("La banca paga a todos")
 
 elif dictJugadores[banca][4] < 7.5:
     print("Se procede a contar los puntos")
+
+print(dictJugadores)
