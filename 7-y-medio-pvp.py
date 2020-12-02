@@ -2,7 +2,7 @@ import random
 
 # Creamos las listas y diccionarios que necesitamos, un diccionario de prioridades y un mazo donde estan todos los valores de prioridades
 
-prioridad = {"oros": 1, "copas": 2, "bastos": 3, "espadas": 4}
+prioridad = {"oros": 1, "copas": 2, "espadas": 3, "bastos": 4}
 
 mazo = [(1, "oros", 1), (2, "oros", 2), (3, "oros", 3), (4, "oros", 4), (5, "oros", 5), (6, "oros", 6), (7, "oros", 7), (10, "oros", 0.5), (11, "oros", 0.5), (12, "oros", 0.5),(1, "copas", 1), (2, "copas", 2), (3, "copas", 3), (4, "copas", 4), (5, "copas", 5), (6, "copas", 6), (7, "copas", 7), (10, "copas", 0.5), (11, "copas", 0.5), (12, "copas", 0.5), (1, "bastos", 1), (2, "bastos", 2), (3, "bastos", 3), (4, "bastos", 4), (5, "bastos", 5), (6, "bastos", 6), (7, "bastos", 7), (10, "bastos", 0.5), (11, "bastos", 0.5), (12, "bastos", 0.5), (1, "espadas", 1), (2, "espadas", 2), (3, "espadas", 3), (4, "espadas", 4), (5, "espadas", 5), (6, "espadas", 6), (7, "espadas", 7), (10, "espadas", 0.5), (11, "espadas", 0.5), (12, "espadas", 0.5),]
 
@@ -47,7 +47,7 @@ while len(listaJugadores) < cantidadJugadores:
     
     if nombreJugador[0:1].isalpha() == True and " " not in nombreJugador:
         listaJugadores.append(nombreJugador)
-        dictJugadores[nombreJugador] = [[], "jugando", "jugando", c, 0, 0, 20, 0] #lista de cartas, estado de la mano, estado de la partida, prioridad del jugador, puntos mano, puntos apostados, puntos restantes, mano
+        dictJugadores[nombreJugador] = [[], "jugando", "jugando", c, 0, 0, 20, 0] #lista de cartas, estado de la mano, estado de la partida, prioridad del jugador, puntos mano, puntos apostados, puntos restantes, cartas en mano
         c += 1
     else:
         print("\nERROR: Tu nombre no empieza por una letra o contiene espacios.\n")
@@ -210,8 +210,13 @@ for i in listaJugadores:
             
             if dictJugadores[i][4]> 7.5:
                 dictJugadores[i][1] = "eliminado"
+                dictJugadores[banca][6] += dictJugadores[i][5]
+                dictJugadores[i][6] -= dictJugadores[i][5]
                 flagPlantarse = True
                 print("".ljust(8) + "¡Jugador " + str(i) + " es eliminado porque tiene " + str(dictJugadores[i][4]) + " puntos!\n")
+                print("".ljust(8) + "¡El jugador " + str(banca) + " (banca) gana " + str(dictJugadores[i][5]) + " puntos!\n")
+                dictJugadores[i][5] = 0
+                print(dictJugadores)
 
 # Ahora hacemos el turno de la banca
 
@@ -269,13 +274,13 @@ while not flagPlantarse:
         dictJugadores[banca][7] += 1
         dictJugadores[banca][4] += dictJugadores[banca][0][dictJugadores[banca][7] -1][2]
         print()
-        print("".ljust(8) + "¡La banca (Jugador" + str(i) + ") roba carta!\n")
+        print("".ljust(8) + "¡La banca (Jugador" + str(banca) + ") roba carta!\n")
                 
     elif plantarse == 2:
         dictJugadores[banca][1] = "plantado"
         flagPlantarse = True
         print()
-        print("".ljust(8) + "¡La banca (Jugador " + str(i) + ") se planta!\n")
+        print("".ljust(8) + "¡La banca (Jugador " + str(banca) + ") se planta!\n")
                 
     else:
         print("ERROR: Opción no válida.")
@@ -285,11 +290,9 @@ while not flagPlantarse:
     if dictJugadores[banca][4] >= 7.5:
         flagPlantarse = True
 
-print(dictJugadores)
-
 # Una vez acabada la ronda procedemos al reparto de puntos
-#los puntos apostados aun no estan restados de cada jugador
-dictJugadores[banca][4] = 7.5
+
+# Si la banca tiene 7.5 puntos gana automaticamente
 if dictJugadores[banca][4] == 7.5:
     mensajeFinRonda = "* ¡La banca gana esta ronda! *"
     for i in range(len(mensajeFinRonda)):
@@ -301,19 +304,128 @@ if dictJugadores[banca][4] == 7.5:
     for i in range(len(mensajeFinRonda)):
         print("*", end="")
     print()
-
-    dictJugadores[banca][6] = 0
     
-    for i in dictJugadores.keys():
-        if i != banca:
+    # Se le suma los puntos que apostó el jugador a la banca y se le resta de su total, se devuelve la apuesta a 0 obviando a los eliminados
+    
+    for i in listaJugadores:
+        if i != banca and dictJugadores[i][1] != "eliminado":
             dictJugadores[banca][6] += dictJugadores[i][5]
             dictJugadores[i][6] -= dictJugadores[i][5]
             dictJugadores[i][5]= 0        
-    
+
+# Si la banca se pasa de 7.5 los jugadores que no son eliminados ganan automaticamente
+
 elif dictJugadores[banca][4] > 7.5:
-    print("La banca paga a todos")
+    mensajeFinRonda = "* ¡La banca se ha pasado de 7.5, los jugadores ganan! *"
+    for i in range(len(mensajeFinRonda)):
+        print("*", end="")
+    print()
+
+    print(mensajeFinRonda)
+
+    for i in range(len(mensajeFinRonda)):
+        print("*", end="")
+    print()
+    
+    # Se le suman los puntos a cada jugador, si la banca no tiene suficientes puntos pagara lo que le quede y ya no pagará más
+    
+    for i in listaJugadores:
+        if i != banca and dictJugadores[i][1] != "eliminado":
+            if dictJugadores[banca][6] > dictJugadores[i][5]:
+                dictJugadores[i][6] += dictJugadores[i][5]
+                dictJugadores[banca][6] -= dictJugadores[i][5]
+                dictJugadores[i][5]= 0
+                
+            elif dictJugadores[banca][6] <= dictJugadores[i][5] and dictJugadores[banca][6] != 0:
+                dictJugadores[i][6] += dictJugadores[banca][6]
+                dictJugadores[banca][6] = 0
+                dictJugadores[i][5]= 0
+            
+            else:
+                dictJugadores[i][5]= 0
+
+# Ahora si la banca no gana o pierde automáticamente se comparan los resultados
+
+c = 0
 
 elif dictJugadores[banca][4] < 7.5:
-    print("Se procede a contar los puntos")
+    for i in listaJugadores:        
+        
+        # Comparamos todos los jugadores que no estan eliminados
+        
+        if i != banca and dictJugadores[i][1] != "eliminado" and dictJugadores[banca][6] != 0:
+            
+            # Si el jugador gana con un 7 y medio se le dara el doble de puntos apostados y la banca perdera el doble, en caso de no poder pagar, dara todos los que le queden
+            
+            if dictJugadores[i][4] == 7.5:
+                if dictJugadores[banca][6] >= dictJugadores[i][5] * 2:
+                    dictJugadores[i][6] += dictJugadores[i][5] * 2
+                    dictJugadores[banca][6] -= dictJugadores[i][5] * 2
+                    dictJugadores[i][5] = 0
+                    
+                else:
+                    dictJugadores[i][6] += dictJugadores[banca][6]
+                    dictJugadores[banca][6] = 0
+                    dictJugadores[i][5] = 0
+                
+                print("¡El jugador " + str(i) + " gana a la banca con un 7.5, ahora será la banca!")
+                
+                # Le añadimos un contador para que el primer jugador que cumpla esta condicion en esta ronda se convierta en la banca
+                
+                if c == 0:
+                    dictJugadores[i][3] = 0
+                    dictJugadores[banca][3] = len(listaJugadores)
+                    c += 1
+            
+            # Si la banca tiene mas puntos o los mismos que el jugador la banca gana
+                
+            elif dictJugadores[banca][4] >= dictJugadores[i][4]:
+                dictJugadores[banca][6] += dictJugadores[i][5]
+                dictJugadores[i][6] += dictJugadores[i][5]
+                dictJugadores[i][5] = 0
+                
+                print("¡La banca gana al jugador " + str(i) + "!")
+                
+            # Si la banca tiene menos puntos que el jugador, la banca le dara los puntos apostados al jugador
+                
+            elif dictJugadores[banca][4] < dictJugadores[i][4]:
+                if dictJugadores[banca][6] >= dictJugadores[i][5]:
+                    dictJugadores[i][6] += dictJugadores[i][5]
+                    dictJugadores[banca][6] -= dictJugadores[i][5]
+                    dictJugadores[i][5] = 0
+                    
+                else:
+                    dictJugadores[i][6] += dictJugadores[banca][6]
+                    dictJugadores[banca][6] = 0
+                    dictJugadores[i][5] = 0
+                
+                print("¡El jugador " + str(i) + " gana a la banca!")
 
+# Vamos a reiniciar las estadisticas de todos los jugadores y el mazo
+
+mazo = [(1, "oros", 1), (2, "oros", 2), (3, "oros", 3), (4, "oros", 4), (5, "oros", 5), (6, "oros", 6), (7, "oros", 7), (10, "oros", 0.5), (11, "oros", 0.5), (12, "oros", 0.5),(1, "copas", 1), (2, "copas", 2), (3, "copas", 3), (4, "copas", 4), (5, "copas", 5), (6, "copas", 6), (7, "copas", 7), (10, "copas", 0.5), (11, "copas", 0.5), (12, "copas", 0.5), (1, "bastos", 1), (2, "bastos", 2), (3, "bastos", 3), (4, "bastos", 4), (5, "bastos", 5), (6, "bastos", 6), (7, "bastos", 7), (10, "bastos", 0.5), (11, "bastos", 0.5), (12, "bastos", 0.5), (1, "espadas", 1), (2, "espadas", 2), (3, "espadas", 3), (4, "espadas", 4), (5, "espadas", 5), (6, "espadas", 6), (7, "espadas", 7), (10, "espadas", 0.5), (11, "espadas", 0.5), (12, "espadas", 0.5),]
+
+c = 0
+
+# Se reinician todos los jugadores y se revisa su estado, si queda un jugador o menos que no esten eliminados se acaba la partida
+
+for i in dictJugadores.keys():
+    dictJugadores[i][0] = []
+    
+    if dictJugadores[i][6] != 0:
+        dictJugadores[i][1] = "jugando"
+    
+    elif dictJugadores[i][6] == 0:
+        dictJugadores[i][1] = "eliminado"
+        dictJugadores[i][2] = "eliminado"
+    
+    dictJugadores[i][4] = 0
+    dictJugadores[i][7] = 0
+
+    if dictJugadores[i][2] != "eliminado":
+        c += 1
+
+if c <= 1:
+    # Hay que hacer un flag final partida
+        
 print(dictJugadores)
