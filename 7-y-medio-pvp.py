@@ -274,7 +274,7 @@ while not flagPlantarse:
         dictJugadores[banca][7] += 1
         dictJugadores[banca][4] += dictJugadores[banca][0][dictJugadores[banca][7] -1][2]
         print()
-        print("".ljust(8) + "¡La banca (Jugador" + str(banca) + ") roba carta!\n")
+        print("".ljust(8) + "¡La banca (Jugador " + str(banca) + ") roba carta!\n")
                 
     elif plantarse == 2:
         dictJugadores[banca][1] = "plantado"
@@ -291,7 +291,7 @@ while not flagPlantarse:
         flagPlantarse = True
 
 # Una vez acabada la ronda procedemos al reparto de puntos
-
+cJugador = 0
 # Si la banca tiene 7.5 puntos gana automaticamente
 if dictJugadores[banca][4] == 7.5:
     mensajeFinRonda = "* ¡La banca gana esta ronda! *"
@@ -346,8 +346,6 @@ elif dictJugadores[banca][4] > 7.5:
 
 # Ahora si la banca no gana o pierde automáticamente se comparan los resultados
 
-c = 0
-
 elif dictJugadores[banca][4] < 7.5:
     for i in listaJugadores:        
         
@@ -372,10 +370,10 @@ elif dictJugadores[banca][4] < 7.5:
                 
                 # Le añadimos un contador para que el primer jugador que cumpla esta condicion en esta ronda se convierta en la banca
                 
-                if c == 0:
+                if cJugador == 0:
                     dictJugadores[i][3] = 0
                     dictJugadores[banca][3] = len(listaJugadores)
-                    c += 1
+                    cJugador += 1
             
             # Si la banca tiene mas puntos o los mismos que el jugador la banca gana
                 
@@ -427,5 +425,6 @@ for i in dictJugadores.keys():
 
 if c <= 1:
     # Hay que hacer un flag final partida
+    print("WIP")
         
 print(dictJugadores)
