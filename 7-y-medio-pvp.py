@@ -378,14 +378,14 @@ while not flagFinPartida and ronda <= rondas:
                     dictJugadores[banca][6] -= dictJugadores[i][5] * 2
                     dictJugadores[i][5]= 0
                     
-                    mensajeFinRonda = "* ¡Además el jugador" + str(i) + " tiene 7.5! *"
-                    for i in range(len(mensajeFinRonda)):
+                    mensajeFinRonda = "* ¡Además el jugador " + str(i) + " tiene 7.5! *"
+                    for j in range(len(mensajeFinRonda)):
                         print("*", end="")
                     print()
 
                     print(mensajeFinRonda)
 
-                    for i in range(len(mensajeFinRonda)):
+                    for j in range(len(mensajeFinRonda)):
                         print("*", end="")
                     print()
                     
@@ -404,14 +404,14 @@ while not flagFinPartida and ronda <= rondas:
                     dictJugadores[banca][6] = 0
                     dictJugadores[i][5]= 0
 
-                    mensajeFinRonda = "* ¡Además el jugador" + str(i) + " tiene 7.5! *"
-                    for i in range(len(mensajeFinRonda)):
+                    mensajeFinRonda = "* ¡Además el jugador " + str(i) + " tiene 7.5! *"
+                    for j in range(len(mensajeFinRonda)):
                         print("*", end="")
                     print()
 
                     print(mensajeFinRonda)
 
-                    for i in range(len(mensajeFinRonda)):
+                    for j in range(len(mensajeFinRonda)):
                         print("*", end="")
                     print()
                     
