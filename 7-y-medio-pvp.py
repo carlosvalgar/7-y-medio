@@ -1,6 +1,6 @@
 import random
 
-rondas = 5
+rondas = 1
 
 # Creamos las listas y diccionarios que necesitamos, un diccionario de prioridades y un mazo donde estan todos los valores de prioridades
 
@@ -589,10 +589,62 @@ while not flagFinPartida and ronda <= rondas:
         
     ronda += 1
     
-if ronda > rondas:
-    print("Fin de la partida por rondas")
+if len(listaJugadores) == 1:
+    
+    for i in listaJugadores:
+        jugadorGanador = "* ¡Ha ganado el jugador " + str(i) + " por ser el único jugador con puntos restantes! *"
+        for j in range(len(jugadorGanador)):
+            print("*", end="")
+        print()
+        print(jugadorGanador)
+        for j in range(len(jugadorGanador)):
+            print("*", end="")
+        print()
 
-if len(listaJugadores) <= 1:
-    print("Fin de la partida por eliminacion de jugadores")
-
-input("Introduzca cualquier tecla para cerrar el programa")
+elif ronda > rondas:
+    puntosGanador = 0
+    jugadorGanador = ""
+    listaEmpates = []    
+    
+    for i in listaJugadores:
+        if dictJugadores[i][6] > puntosGanador:
+            puntosGanador = dictJugadores[i][6]
+            jugadorGanador = i
+            listaEmpates = []
+            listaEmpates.append(i)
+        
+        elif dictJugadores [i][6] == puntosGanador:
+            listaEmpates.append(i)
+    
+    if len(listaEmpates) == 1:
+        ganador = "* El jugador con más puntos es " + str(jugadorGanador) + " por lo tanto gana la partida! *"
+        
+        for i in range(len(ganador)):
+            print("*", end="")
+        print()
+        
+        print(ganador)
+        
+        for i in range(len(ganador)):
+            print("*", end="")
+        print()
+    
+    elif len(listaEmpates) > 1:
+        ganador = "* ¡Ha habido un empate! Los jugadores ganadores son: *"
+        
+        for i in range(len(ganador)):
+            print("*", end="")
+        print()
+        
+        print(ganador)
+        
+        for j in listaEmpates:
+            empate = "*" + "".ljust(4) + " >>> Jugador: " + str(j)
+            c = len(ganador) - len(empate)
+            print(str(empate) + "*".rjust(c))
+        
+        for i in range(len(ganador)):
+            print("*", end="")
+        print()
+    
+input("Introduzca cualquier tecla para cerrar el programa ") 
