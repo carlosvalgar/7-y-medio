@@ -96,9 +96,9 @@ for i in listaPrioridad:
 for i in dictJugadores:
     dictJugadores[i][3] = listaJugadores.index(i)
 
-# Añadimos una variable banca para poder dejarla aparte
+# Añadimos una variable banca para poder dejarla aparte y le asignamos el valor nuevaBanca para hacer comparaciones despues cuando vaya a haber un cambio de banca por 7 y medio
 banca = listaJugadores[0]
-
+nuevaBanca = banca
 
 # Aqui es donde haremos el bucle de partidas
 
@@ -109,6 +109,10 @@ maxApuesta = 5
 
 while not flagFinPartida and ronda <= rondas:
 
+    print(banca)
+    print(dictJugadores)
+    print(listaJugadores)
+    
     # Añadimos que dependiendo de la ronda aumenten las apuestas de los bots, habiendo un incremento al acabar el primer tercio de la partida y al acabar el segundo tercio
 
     if ronda >= (rondas * 2) // 3:
@@ -139,6 +143,10 @@ while not flagFinPartida and ronda <= rondas:
 
     # Seleccionamos el jugador por el orden que tenemos en la lista, la banca se deja para el final.
 
+    print(banca)
+    print(dictJugadores)
+    print(listaJugadores)
+    
     print()
 
     if ronda == 1:
@@ -420,7 +428,7 @@ while not flagFinPartida and ronda <= rondas:
     
     elif cJugadorEliminado != len(listaJugadores) -1:
         
-        # Ahora hacemos el turno de la banca
+        # Ahora hacemos el turno de la banca, separamos jugadores de bots
 
         print("\nTurno del jugador " + str(banca) + " (banca):\n")
                 
@@ -712,6 +720,9 @@ while not flagFinPartida and ronda <= rondas:
 
     for i in listaJugadores:
         dictJugadores[i][0] = []
+        dictJugadores[i][4] = 0
+        dictJugadores[i][7] = 0
+        dictJugadores[i][5] = 0
         
         if dictJugadores[i][6] != 0:
             dictJugadores[i][1] = "jugando"
@@ -724,8 +735,7 @@ while not flagFinPartida and ronda <= rondas:
             print("".ljust(8) + ">>> El jugador " + str(i) + " ha sido eliminado de la partida")
             
         
-        dictJugadores[i][4] = 0
-        dictJugadores[i][7] = 0
+
 
     # Sacamos los jugadores eliminados de la lista de prioridad
 
@@ -737,11 +747,11 @@ while not flagFinPartida and ronda <= rondas:
     if len(listaJugadores) <= 1:
         flagFinPartida = True
 
-    # Cambiamos el orden de prioridad de jugadores si han habido cambios de banca
+    # Cambiamos el orden de prioridad de jugadores si han habido cambios de banca por 7.5
 
-    if dictJugadores[banca][3] != 0:
+    if banca != nuevaBanca:
         
-        # Si no se ha eliminado la banca significa que un jugador ha destronado la banca con un 7.5, por lo que cambiamos de sitio esos dos jugadores
+        # Si la banca no ha sido eliminada cambiaremos de sitio al jugador con la banca
         
         if dictJugadores[banca][2] != "eliminado":    
             listaJugadores.remove(banca)
@@ -758,16 +768,28 @@ while not flagFinPartida and ronda <= rondas:
             listaJugadores.append(banca)
             banca = nuevaBanca
         
-        # Volvemos a organizar la lista de Jugadores y modificamos las prioridades, si se ha eliminado la banca ya la habremos quitado de la lista por lo que ya estará ordenada
+        # Si ha sido eliminado entonces solo añadimos la nueva banca que es quien tiene el 7.5
         
-        for i in listaJugadores:
-            dictJugadores[i][3] = listaJugadores.index(i)
-            if dictJugadores[i][3] == 0:
-                banca = i
+        elif dictJugadores[banca][2] == "eliminado":
+            listaJugadores.remove(nuevaBanca)
+            
+            if len(listaJugadores) == 0:
+                listaJugadores.append(nuevaBanca)
+                
+            else:
+                listaJugadores.insert(0, nuevaBanca)
+                
+            banca = nuevaBanca
+        
+        # Volvemos a organizar la lista de Jugadores y modificamos las prioridades, si se ha eliminado la banca ya la habremos quitado de la lista por lo que ya estará ordenada colocamos la nuevaBanca como la misma banca para las comprobaciones en la siguiente ronda
+        
+    for i in listaJugadores:
+        dictJugadores[i][3] = listaJugadores.index(i)
+        if dictJugadores[i][3] == 0:
+            banca = i
+            nuevaBanca = i
         
     ronda += 1
-    
-    print(dictJugadores)
     
 if len(listaJugadores) == 1:
     
