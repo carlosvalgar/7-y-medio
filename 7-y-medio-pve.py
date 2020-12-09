@@ -1,7 +1,7 @@
 import random
 
 rondas = 6
-
+# Estas en la linea 431
 # Creamos las listas y diccionarios que necesitamos, un diccionario de prioridades y un mazo donde estan todos los valores de prioridades
 
 prioridad = {"oros": 1, "copas": 2, "bastos": 3, "espadas": 4}
