@@ -1,6 +1,6 @@
 import random
 
-rondas = 1
+rondas = 6
 
 # Creamos las listas y diccionarios que necesitamos, un diccionario de prioridades y un mazo donde estan todos los valores de prioridades
 
@@ -35,7 +35,7 @@ dictJugadores = {}
 flagCantidadJugadores = False
 
 while not flagCantidadJugadores:
-    cantidadJugadores = int(input("¿Cuantos jugadores va a tener la partida?  (mínimo 2, máximo 8): "))
+    cantidadJugadores = int(input("¿Cuantos jugadores va a tener la partida? (mínimo 2, máximo 8): "))
 
     if cantidadJugadores > 8 or cantidadJugadores < 2:
         print("ERROR: Elige una cantidad entre 2 y 8.")
@@ -109,10 +109,20 @@ maxApuesta = 5
 
 while not flagFinPartida and ronda <= rondas:
 
+    # Añadimos que dependiendo de la ronda aumenten las apuestas de los bots, habiendo un incremento al acabar el primer tercio de la partida y al acabar el segundo tercio
+
+    if ronda >= (rondas * 2) // 3:
+        minApuesta = 6
+        maxApuesta = 12
+        
+    elif ronda >= rondas // 3:
+        minApuesta = 4
+        maxApuesta = 8
+    
     # Repartimos una carta a cada jugador en orden, dejando al ultimo la banca
     for i in range(1, len(dictJugadores)):
         for j in dictJugadores.keys():
-            if i == dictJugadores[j][3]:
+            if i == dictJugadores[j][3] and dictJugadores[j][2] != "eliminado":
                 carta = random.choice(mazo)
                 dictJugadores[j][0].append(carta)
                 mazo.remove(carta)
@@ -251,6 +261,7 @@ while not flagFinPartida and ronda <= rondas:
                         dictJugadores[banca][6] += dictJugadores[i][5]
                         dictJugadores[i][6] -= dictJugadores[i][5]
                         flagPlantarse = True
+                        print()
                         print("".ljust(8) + "¡Jugador " + str(i) + " es eliminado porque tiene " + str(dictJugadores[i][4]) + " puntos!\n")
                         print("".ljust(8) + "¡El jugador " + str(banca) + " (banca) gana " + str(dictJugadores[i][5]) + " puntos!\n")
                         dictJugadores[i][5] = 0
@@ -273,7 +284,7 @@ while not flagFinPartida and ronda <= rondas:
                 # Miramos si el 20% es el mismo que la apuesta maxima
                 
                 elif apuestaBot == maxApuesta:
-                    aleatoriedad = random.randint(-1, 1)
+                    aleatoriedad = random.randint(-1, 0)
                     dictJugadores[i][5] = apuestaBot + aleatoriedad
                     print("El " + str(i) + " apuesta " + str(dictJugadores[i][5]) + " puntos")
                 
@@ -284,14 +295,14 @@ while not flagFinPartida and ronda <= rondas:
                     # Miramos si ademas es superior al minimo
                     
                     if apuestaBot > minApuesta:
-                        aleatoriedad = random.randint(-1, 2)
+                        aleatoriedad = random.randint(-1, 1)
                         dictJugadores[i][5] = apuestaBot + aleatoriedad
                         print("El " + str(i) + " apuesta " + str(dictJugadores[i][5]) + " puntos")
                         
                     # Si es igual al mínimo
                     
                     elif apuestaBot == minApuesta:
-                        aleatoriedad = random.randint(0, 2)
+                        aleatoriedad = random.randint(0, 1)
                         dictJugadores[i][5] = apuestaBot + aleatoriedad
                         print("El " + str(i) + " apuesta " + str(dictJugadores[i][5]) + " puntos")
                         
@@ -343,12 +354,11 @@ while not flagFinPartida and ronda <= rondas:
                             dictJugadores[i][7] += 1
                             dictJugadores[i][4] += dictJugadores[i][0][dictJugadores[i][7] -1][2]
                             print()
-                            print("".ljust(8) + "¡Jugador " + str(i) + " roba carta!\n")
+                            print("".ljust(8) + "¡Jugador " + str(i) + " roba carta!")
                         
                         # Si esta entre 50 y 65 esas son las probabilidades de robar, por lo que generamos un numero aleatorio para ver si roba
                         
                         elif porcentajeRobarCarta >= 50 and porcentajeRobarCarta <= 65:
-                            print("No robo seguro")
                             probabilidadRobarCarta = random.random() * 100
                             
                             if probabilidadRobarCarta <= porcentajeRobarCarta:
@@ -358,17 +368,16 @@ while not flagFinPartida and ronda <= rondas:
                                 dictJugadores[i][7] += 1
                                 dictJugadores[i][4] += dictJugadores[i][0][dictJugadores[i][7] -1][2]
                                 print()
-                                print("".ljust(8) + "¡Jugador " + str(i) + " roba carta!\n")
+                                print("".ljust(8) + "¡Jugador " + str(i) + " roba carta!")
                             
                             else:
-                                print("me planto dice el bot")
                                 dictJugadores[i][1] = "plantado"
+                                print()
+                                print("".ljust(8) + "¡Jugador " + str(i) + " se planta!\n")
                         
                         # En caso que sea menor a 50, se divide entre 3 y ese sera la probabilidad de robar carta del bot
                         
                         elif porcentajeRobarCarta < 50:
-                            print("Bastante improbable que robe")
-                            
                             probabilidadRobarCarta = random.random() * 100
                             
                             if probabilidadRobarCarta <= porcentajeRobarCarta / 3:
@@ -381,8 +390,9 @@ while not flagFinPartida and ronda <= rondas:
                                 print("".ljust(8) + "¡Jugador " + str(i) + " roba carta!\n")
                             
                             else:
-                                print("me planto dice el bot")
-                                dictJugadores[i][1] = "plantado"  
+                                print()
+                                print("".ljust(8) + "¡Jugador " + str(i) + " se planta!\n")
+                                dictJugadores[i][1] = "plantado"
                                             
                     # Si se pasa de 7.5 lo eliminaremos directamente
                     
@@ -391,6 +401,7 @@ while not flagFinPartida and ronda <= rondas:
                         dictJugadores[banca][6] += dictJugadores[i][5]
                         dictJugadores[i][6] -= dictJugadores[i][5]
                         flagPlantarse = True
+                        print()
                         print("".ljust(8) + "¡Jugador " + str(i) + " es eliminado porque tiene " + str(dictJugadores[i][4]) + " puntos!\n")
                         print("".ljust(8) + "¡El jugador " + str(banca) + " (banca) gana " + str(dictJugadores[i][5]) + " puntos!\n")
                         dictJugadores[i][5] = 0
@@ -749,11 +760,14 @@ while not flagFinPartida and ronda <= rondas:
         
         # Volvemos a organizar la lista de Jugadores y modificamos las prioridades, si se ha eliminado la banca ya la habremos quitado de la lista por lo que ya estará ordenada
         
-        for i in dictJugadores:
-            if dictJugadores[i][2] != "eliminado":
-                dictJugadores[i][3] = listaJugadores.index(i)
+        for i in listaJugadores:
+            dictJugadores[i][3] = listaJugadores.index(i)
+            if dictJugadores[i][3] == 0:
+                banca = i
         
     ronda += 1
+    
+    print(dictJugadores)
     
 if len(listaJugadores) == 1:
     
