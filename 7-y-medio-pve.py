@@ -35,14 +35,14 @@ dictJugadores = {}
 flagCantidadJugadores = False
 
 while not flagCantidadJugadores:
-    cantidadJugadores = int(input("¿Cuantos jugadores va a tener la partida? (mínimo 2, máximo 8): "))
+    cantidadJugadores = int(input("¿Cuantos jugadores, bots y humanos, va a tener la partida? (mínimo 2, máximo 8): "))
 
     if cantidadJugadores > 8 or cantidadJugadores < 2:
         print("ERROR: Elige una cantidad entre 2 y 8.")
     else:
         cantidadHumanos = int(input("".ljust(4) + "¿Cuantos seran humanos? "))
         if cantidadJugadores < cantidadHumanos:
-            print("ERROR: La cantidad de humanos no puede ser superior a la de jugadores")
+            print("ERROR: La cantidad de humanos no puede ser superior a la de jugadores.")
         elif cantidadJugadores <= 8 and cantidadJugadores >= 2:
             flagCantidadJugadores = True
 
@@ -431,75 +431,115 @@ while not flagFinPartida and ronda <= rondas:
         # Ahora hacemos el turno de la banca, separamos jugadores de bots
 
         print("\nTurno del jugador " + str(banca) + " (banca):\n")
-                
-                
-        # Enseñamos todas las cartas y puntos de cada jugador
-        for j in listaJugadores:
-            print("".ljust(4) + "Información del jugador " + str(j), end="")
+        
+        if dictJugadores[banca][8] == "humano":
                     
-            if dictJugadores[j][3] == 0:
-                print(" (Banca):")
+            # Enseñamos todas las cartas y puntos de cada jugador
+            for j in listaJugadores:
+                print("".ljust(4) + "Información del jugador " + str(j), end="")
+                        
+                if dictJugadores[j][3] == 0:
+                    print(" (Banca):")
+                                
+                else:
+                    print(" (" + str(dictJugadores[j][1]) + "):")
+                        
+                if dictJugadores[j][1] != "eliminado":
+                        
+                    print("".ljust(8) + "Cartas en mano: ", end="")
                             
-            else:
-                print(" (" + str(dictJugadores[j][1]) + "):")
-                    
-            if dictJugadores[j][1] != "eliminado":
-                    
-                print("".ljust(8) + "Cartas en mano: ", end="")
+                    for k in dictJugadores[j][0]:
+                        print(str(k[0]) + " de " + str(k[1]) + ", ", end="")
+                            
+                    print()
+                    print("".ljust(8) + "Puntos de la mano: ", dictJugadores[j][4])
+                    print("".ljust(8) + "Puntos apostados: ", dictJugadores[j][5])
+                    print()
                         
-                for k in dictJugadores[j][0]:
-                    print(str(k[0]) + " de " + str(k[1]) + ", ", end="")
-                        
-                print()
-                print("".ljust(8) + "Puntos de la mano: ", dictJugadores[j][4])
-                print("".ljust(8) + "Puntos apostados: ", dictJugadores[j][5])
-                print()
-                    
-            elif dictJugadores[j][1] == "eliminado":
-                print()
+                elif dictJugadores[j][1] == "eliminado":
+                    print()
 
-        flagPlantarse = False
-                
-        # Hacemos un menú para que el jugador decida que quiere hacer enseñandole sus cartas cada vez que roba.
-                
-        while not flagPlantarse:          
-            print("Tus cartas son: ", end="")
+            flagPlantarse = False
                     
-            for j in dictJugadores[banca][0]:
-                print(str(j[0]) + " de " + str(j[1]), end=", ")
-            print()
+            # Hacemos un menú para que el jugador decida que quiere hacer enseñandole sus cartas cada vez que roba.
                     
-            print("Tienes " + str(dictJugadores[banca][4]) + " puntos en mano")
+            while not flagPlantarse:          
+                print("Tus cartas son: ", end="")
                         
-            print("\nQue quieres hacer?\n    1.- Robar carta\n    2.- Plantarte\n")
-                    
-            plantarse = int(input("Elige el número de la opción que quieras seleccionar: "))
-                    
-            # Si decide robar le añadiremos la carta a su lista de cartas y la eliminaremos del mazo, actualizando los puntos y la cantidad de cartas en mano
-                    
-            if plantarse == 1:
-                carta = random.choice(mazo)
-                dictJugadores[banca][0].append(carta)
-                mazo.remove(carta)
-                dictJugadores[banca][7] += 1
-                dictJugadores[banca][4] += dictJugadores[banca][0][dictJugadores[banca][7] -1][2]
+                for j in dictJugadores[banca][0]:
+                    print(str(j[0]) + " de " + str(j[1]), end=", ")
                 print()
-                print("".ljust(8) + "¡La banca (Jugador " + str(banca) + ") roba carta!\n")
                         
-            elif plantarse == 2:
-                dictJugadores[banca][1] = "plantado"
-                flagPlantarse = True
-                print()
-                print("".ljust(8) + "¡La banca (Jugador " + str(banca) + ") se planta!\n")
+                print("Tienes " + str(dictJugadores[banca][4]) + " puntos en mano")
+                            
+                print("\nQue quieres hacer?\n    1.- Robar carta\n    2.- Plantarte\n")
                         
-            else:
-                print("ERROR: Opción no válida.")
-                    
-            # Si la banca se pasa de 7.5 o lo iguala salimos del bucle porque ya se ha acabado la ronda
-                    
-            if dictJugadores[banca][4] >= 7.5:
-                flagPlantarse = True
+                plantarse = int(input("Elige el número de la opción que quieras seleccionar: "))
+                        
+                # Si decide robar le añadiremos la carta a su lista de cartas y la eliminaremos del mazo, actualizando los puntos y la cantidad de cartas en mano
+                        
+                if plantarse == 1:
+                    carta = random.choice(mazo)
+                    dictJugadores[banca][0].append(carta)
+                    mazo.remove(carta)
+                    dictJugadores[banca][7] += 1
+                    dictJugadores[banca][4] += dictJugadores[banca][0][dictJugadores[banca][7] -1][2]
+                    print()
+                    print("".ljust(8) + "¡La banca (Jugador " + str(banca) + ") roba carta!\n")
+                            
+                elif plantarse == 2:
+                    dictJugadores[banca][1] = "plantado"
+                    flagPlantarse = True
+                    print()
+                    print("".ljust(8) + "¡La banca (Jugador " + str(banca) + ") se planta!\n")
+                            
+                else:
+                    print("ERROR: Opción no válida.")
+                        
+                # Si la banca se pasa de 7.5 o lo iguala salimos del bucle porque ya se ha acabado la ronda
+                        
+                if dictJugadores[banca][4] >= 7.5:
+                    flagPlantarse = True
 
+        # Añadimos la logica bot de la banca, siempre que haya un jugador con mas puntos que la banca va a robar carta
+        
+        elif dictJugadores[banca][8] == "bot":
+            flagPlantarse = False
+            
+            # Hacemos un bucle que se repite siempre que la banca haya robado carta, y si roba carta se repite desde el principio
+            
+            while not flagPlantarse:
+                
+                # Si tiene 7 y medio o mas se acaba el turno
+                
+                if dictJugadores[banca][4] >= 7.5:
+                    flagPlantarse = True
+                    
+                else:
+                    botBancaRobaCarta = False
+                    
+                    # Miramos toda la lista de jugadores y comparamos sus puntos con los de la banca, si hay alguien que le supere roba carta y vuelve a empezar el bucle
+                    
+                    for i in listaJugadores:
+                        if dictJugadores[i][4] > dictJugadores[banca][4]:
+                            carta = random.choice(mazo)
+                            dictJugadores[banca][0].append(carta)
+                            mazo.remove(carta)
+                            dictJugadores[banca][7] += 1
+                            dictJugadores[banca][4] += dictJugadores[banca][0][dictJugadores[banca][7] -1][2]
+                            print()
+                            print("".ljust(8) + "¡La banca (Jugador " + str(banca) + ") roba carta!\n")
+                            botBancaRobaCarta = True
+                            break
+                    
+                    # Si no ha robado carta se planta
+                    
+                    if botBancaRobaCarta == False:
+                        dictJugadores[banca][1] = "plantado"
+                        flagPlantarse = True
+                        print()
+                        print("".ljust(8) + "¡La banca (Jugador " + str(banca) + ") se planta!\n")
+                
     # Una vez acabada la ronda procedemos al reparto de puntos
     cJugador = 0
     
