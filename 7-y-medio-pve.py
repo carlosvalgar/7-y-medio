@@ -43,23 +43,31 @@ print("Bienvenidos a Siete y medio, ", end ="")
 flagCantidadJugadores = False
 
 while not flagCantidadJugadores:
-    print("¿Cuántos jugadores (bots y humanos) va a tener la partida? (mínimo 2, máximo 8):\n")
-    cantidadJugadores = int(input("> "))
-    print()
-    
-    if cantidadJugadores > 8 or cantidadJugadores < 2:
-        print("ERROR: Elige una cantidad entre 2 y 8.\n")
-    else:
-        while not flagCantidadJugadores:
-            print("¿Cuántos de estos jugadores serán humanos?\n")
-            cantidadHumanos = int(input("> "))
-            print()
-            
-            if cantidadJugadores < cantidadHumanos:
-                print("ERROR: La cantidad de humanos no puede ser superior a la de jugadores.\n")
+    try:
+        print("¿Cuántos jugadores (bots y humanos) va a tener la partida? (mínimo 2, máximo 8):\n")
+        cantidadJugadores = int(input("> "))
+        print()
+        
+        if cantidadJugadores > 8 or cantidadJugadores < 2:
+            print("ERROR: Elige una cantidad entre 2 y 8.\n")
+        else:
+            while not flagCantidadJugadores:
+                try:
+                    print("¿Cuántos de estos jugadores serán humanos?\n")
+                    cantidadHumanos = int(input("> "))
+                    print()
+                    
+                    if cantidadJugadores < cantidadHumanos:
+                        print("ERROR: La cantidad de humanos no puede ser superior a la de jugadores.\n")
+                        
+                    elif cantidadJugadores <= 8 and cantidadJugadores >= 2:
+                        flagCantidadJugadores = True
+                        
+                except ValueError:
+                    print("\nERROR: Introduce un número entero.\n")
                 
-            elif cantidadJugadores <= 8 and cantidadJugadores >= 2:
-                flagCantidadJugadores = True
+    except ValueError:
+        print("\nERROR: Introduce un número entero.\n")
 
 cantidadBots = cantidadJugadores - cantidadHumanos
 
@@ -268,18 +276,22 @@ while not flagFinPartida and ronda <= rondas:
                 flagPuntosApostados = False
                 
                 while not flagPuntosApostados:
-                    print("¿Cuántos puntos quieres apostar jugador " + str(i) + " (tienes " + str(dictJugadores[i][6]) + " puntos restantes)?\n")
-                    dictJugadores[i][5] = int(input("> "))
-                    print()
-                    
-                    if dictJugadores[i][5] <= dictJugadores[i][6] and dictJugadores[i][5] > 0:
-                        flagPuntosApostados = True
-                    
-                    elif dictJugadores[i][5] > dictJugadores[i][6]:
-                        print("ERROR: Has intentado apostar más puntos de los que tienes.\n")
+                    try:
+                        print("¿Cuántos puntos quieres apostar jugador " + str(i) + " (tienes " + str(dictJugadores[i][6]) + " puntos restantes)?\n")
+                        dictJugadores[i][5] = int(input("> "))
+                        print()
                         
-                    else:
-                        print("ERROR: Has introducido una apuesta no válida.\n")
+                        if dictJugadores[i][5] <= dictJugadores[i][6] and dictJugadores[i][5] > 0:
+                            flagPuntosApostados = True
+                        
+                        elif dictJugadores[i][5] > dictJugadores[i][6]:
+                            print("ERROR: Has intentado apostar más puntos de los que tienes.\n")
+                            
+                        else:
+                            print("ERROR: Has introducido una apuesta no válida.\n")
+                        
+                    except ValueError:
+                        print("\nERROR: Introduce un número entero.\n")
                 
                 flagPlantarse = False
                 
@@ -307,11 +319,23 @@ while not flagFinPartida and ronda <= rondas:
                             print("*", end="")
                         print()
                     print()
-                        
-                    print("¿Que quieres hacer?\n    1.- Robar carta\n    2.- Plantarte\n")
-                    print("Elige el número de la opción que quieras seleccionar:\n")
-                    plantarse = int(input("> "))
-                    print()
+                    
+                    flagAccion = False
+                    
+                    while not flagAccion:
+                        try:
+                            print("¿Que quieres hacer?\n    1.- Robar carta\n    2.- Plantarte\n")
+                            print("Elige el número de la opción que quieras seleccionar:\n")
+                            plantarse = int(input("> "))
+                            print()
+                            if plantarse == 1 or plantarse == 2:
+                                flagAccion = True
+                                
+                            else:
+                                print("ERROR: Opción no válida.\n")
+                                
+                        except ValueError:
+                            print("\nERROR: Introduce un número entero.\n")
                     
                     # Si decide robar le añadiremos la carta a su lista de cartas y la eliminaremos del mazo, actualizando los puntos y la cantidad de cartas en mano
                     
@@ -322,15 +346,13 @@ while not flagFinPartida and ronda <= rondas:
                         dictJugadores[i][7] += 1
                         dictJugadores[i][4] += dictJugadores[i][0][dictJugadores[i][7] -1][2]
                         print("¡Jugador " + str(i) + " roba carta!\n")
+                        print("".ljust(4) + ">>>> ¡Ha robado el " + str(carta[0]) + " de " + str(carta[1]) + "!\n")
                         
                     elif plantarse == 2:
                         dictJugadores[i][1] = "plantado"
                         flagPlantarse = True
                         print("¡Jugador " + str(i) + " se planta!\n")
                         
-                    else:
-                        print("ERROR: Opción no válida.")
-                    
                     # Si se pasa de 7.5 lo eliminaremos directamente
                     
                     if dictJugadores[i][4]> 7.5:
@@ -358,6 +380,11 @@ while not flagFinPartida and ronda <= rondas:
                     print("-", end="")
                 print()
                 print()
+                
+                # Enseñamos la primera carta que robó el bot
+                
+                print("El " + str(i) + " empieza con el " + str(dictJugadores[i][0][0][0]) + " de " + str(dictJugadores[i][0][0][1]) + ".\n")
+                
                 # Añadimos el codigo de lo que va a apostar el bot, empieza cumpliendo que apuesta el 20% de sus puntos dentro de un rango de 2 a 5, dependiendo de el porcentaje apostará mas cerca de un limite o del otro.
                 
                 apuestaBot = round(dictJugadores[i][6] * 0.2)
@@ -416,6 +443,7 @@ while not flagFinPartida and ronda <= rondas:
                         dictJugadores[i][7] += 1
                         dictJugadores[i][4] += dictJugadores[i][0][dictJugadores[i][7] -1][2]
                         print("¡El " + str(i) + " roba carta!\n")
+                        print("".ljust(4) + ">>>> ¡Ha robado el " + str(carta[0]) + " de " + str(carta[1]) + "!\n")
                         
                     # Si tiene mas puntos que la banca se calcula la posibilidad de jugar carta
                     
@@ -440,6 +468,7 @@ while not flagFinPartida and ronda <= rondas:
                             dictJugadores[i][7] += 1
                             dictJugadores[i][4] += dictJugadores[i][0][dictJugadores[i][7] -1][2]
                             print("¡El " + str(i) + " roba carta!\n")
+                            print("".ljust(4) + ">>>> ¡Ha robado el " + str(carta[0]) + " de " + str(carta[1]) + "!\n")
                         
                         # Si esta entre 50 y 65 esas son las probabilidades de robar, por lo que generamos un numero aleatorio para ver si roba
                         
@@ -453,6 +482,7 @@ while not flagFinPartida and ronda <= rondas:
                                 dictJugadores[i][7] += 1
                                 dictJugadores[i][4] += dictJugadores[i][0][dictJugadores[i][7] -1][2]
                                 print("¡El " + str(i) + " roba carta!\n")
+                                print("".ljust(4) + ">>>> ¡Ha robado el " + str(carta[0]) + " de " + str(carta[1]) + "!\n")
                             
                             else:
                                 dictJugadores[i][1] = "plantado"
@@ -470,6 +500,7 @@ while not flagFinPartida and ronda <= rondas:
                                 dictJugadores[i][7] += 1
                                 dictJugadores[i][4] += dictJugadores[i][0][dictJugadores[i][7] -1][2]
                                 print("¡El " + str(i) + " roba carta!\n")
+                                print("".ljust(4) + ">>>> ¡Ha robado el " + str(carta[0]) + " de " + str(carta[1]) + "!\n")
                             
                             else:
                                 print("¡El " + str(i) + " se planta!\n")
@@ -591,12 +622,22 @@ while not flagFinPartida and ronda <= rondas:
                     print()
                 print()
                                 
-                print("¿Que quieres hacer?\n    1.- Robar carta\n    2.- Plantarte\n")
-                
-                print("Elige el número de la opción que quieras seleccionar:\n")
-                
-                plantarse = int(input("> "))
-                print()
+                flagAccion = False
+                    
+                while not flagAccion:
+                    try:
+                        print("¿Que quieres hacer?\n    1.- Robar carta\n    2.- Plantarte\n")
+                        print("Elige el número de la opción que quieras seleccionar:\n")
+                        plantarse = int(input("> "))
+                        print()
+                        if plantarse == 1 or plantarse == 2:
+                            flagAccion = True
+                                
+                        else:
+                            print("ERROR: Opción no válida.\n")
+                                
+                    except ValueError:
+                        print("\nERROR: Introduce un número entero.\n")
                         
                 # Si decide robar le añadiremos la carta a su lista de cartas y la eliminaremos del mazo, actualizando los puntos y la cantidad de cartas en mano
                         
@@ -606,17 +647,13 @@ while not flagFinPartida and ronda <= rondas:
                     mazo.remove(carta)
                     dictJugadores[banca][7] += 1
                     dictJugadores[banca][4] += dictJugadores[banca][0][dictJugadores[banca][7] -1][2]
-                    print()
-                    print("".ljust(8) + "¡La banca (Jugador " + str(banca) + ") roba carta!\n")
+                    print("¡La banca (Jugador " + str(banca) + ") roba carta!\n")
+                    print("".ljust(4) + ">>>> ¡Ha robado el " + str(carta[0]) + " de " + str(carta[1]) + "!\n")
                             
                 elif plantarse == 2:
                     dictJugadores[banca][1] = "plantado"
                     flagPlantarse = True
-                    print()
-                    print("".ljust(8) + "¡La banca (Jugador " + str(banca) + ") se planta!\n")
-                            
-                else:
-                    print("ERROR: Opción no válida.")
+                    print("¡La banca (Jugador " + str(banca) + ") se planta!\n")
                         
                 # Si la banca se pasa de 7.5 o lo iguala salimos del bucle porque ya se ha acabado la ronda
                         
@@ -627,6 +664,8 @@ while not flagFinPartida and ronda <= rondas:
         
         elif dictJugadores[banca][8] == "bot":
             flagPlantarse = False
+            
+            print("La banca (" + str(banca) + ") empieza con el " + str(dictJugadores[i][0][0][0]) + " de " + str(dictJugadores[i][0][0][1]) + ".\n")
             
             # Hacemos un bucle que se repite siempre que la banca haya robado carta, y si roba carta se repite desde el principio
             
@@ -650,6 +689,7 @@ while not flagFinPartida and ronda <= rondas:
                             dictJugadores[banca][7] += 1
                             dictJugadores[banca][4] += dictJugadores[banca][0][dictJugadores[banca][7] -1][2]
                             print("¡La banca (" + str(banca) + ") roba carta!\n")
+                            print("".ljust(4) + ">>>> ¡Ha robado el " + str(carta[0]) + " de " + str(carta[1]) + "!\n")
                             botBancaRobaCarta = True
                             break
                     
