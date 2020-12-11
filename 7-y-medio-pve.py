@@ -53,7 +53,7 @@ while not flagCantidadJugadores:
         else:
             while not flagCantidadJugadores:
                 try:
-                    print("¿Cuántos de estos jugadores serán humanos?\n")
+                    print("¿Cuántos de estos jugadores serán humanos?\n    >>>> Elige 0 para una partida de bots contra bots.\n    >>>> Elige el mismo número de jugadores que humanos para una partida sin bots.\n")
                     cantidadHumanos = int(input("> "))
                     print()
                     
