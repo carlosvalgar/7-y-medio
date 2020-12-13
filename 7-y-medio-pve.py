@@ -665,7 +665,7 @@ while not flagFinPartida and ronda <= rondas:
         elif dictJugadores[banca][8] == "bot":
             flagPlantarse = False
             
-            print("La banca (" + str(banca) + ") empieza con el " + str(dictJugadores[i][0][0][0]) + " de " + str(dictJugadores[i][0][0][1]) + ".\n")
+            print("La banca (" + str(banca) + ") empieza con el " + str(dictJugadores[banca][0][0][0]) + " de " + str(dictJugadores[banca][0][0][1]) + ".\n")
             
             # Hacemos un bucle que se repite siempre que la banca haya robado carta, y si roba carta se repite desde el principio
             
