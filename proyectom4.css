@@ -1,0 +1,75 @@
+.titulo{
+    text-align: center;
+    font-weight: bolder;
+    font-size: 20px;
+}
+
+#cabecera{
+
+    width: 100%;
+    height: 10%;
+    border:1px solid black;
+
+}
+
+#general{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 90%;
+    border:1px solid black;
+}
+
+.contenido{
+
+    width: 80%;
+    height: 100%;
+    border:1px solid black;
+    overflow: auto;
+} 
+
+
+.mindice{
+
+    width: 20%;
+    height: 100%;
+    border:1px solid black;
+}
+
+.indice{
+    font-weight: bolder;
+    text-align: center;
+    font-size: 27px;
+}
+
+h4 {
+    padding-left: 20px;
+}
+.informe{
+        height: 350px;
+        width: 550px;
+        border: 2px solid rgb(3, 109, 109);
+        border-radius: 25px;
+        background-color:rgb(164, 226, 230);
+        margin: auto;
+        padding:10px;
+        margin-top: 5px;
+
+    }
+
+
+table{
+    margin: auto;
+    border: 1px solid black;
+    background-color: rgba(255, 255, 255, 0.856);
+    text-align: center;
+}
+
+th{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    width: 100%;
+}
+
+td {
+    border: 1px solid black;
+}
