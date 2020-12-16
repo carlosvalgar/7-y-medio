@@ -11,3 +11,7 @@ Información de los Autores:
     Nombre: Yeray Cortés García
     e-mail: ycortesgarcia.cf@iesesteveterradas.cat
     Redes sociales: @Yyeray98
+
+    Nombre: Pau Tormo Casado
+    e-mail: pautormocasado@gmail.com
+    Redes sociales: @pautormo
