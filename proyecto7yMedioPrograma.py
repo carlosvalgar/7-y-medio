@@ -55,7 +55,7 @@ while not flagMenuPrincipal:
         listaJugadores = []
         dictJugadores = {}
         
-        rondas = 6
+        rondas = 30
         ronda = 1
         minApuesta = 2
         maxApuesta = 5
