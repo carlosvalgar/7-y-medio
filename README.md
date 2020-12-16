@@ -7,3 +7,7 @@ Información de los Autores:
     Nombre: Carlos Guillermo Valenzuela García
     e-mail: darksunreaper@gmail.com
     Redes sociales: @darksunreaper
+
+    Nombre: Yeray Cortés García
+    e-mail: ycortesgarcia.cf@iesesteveterradas.cat
+    Redes sociales: @Yyeray98
