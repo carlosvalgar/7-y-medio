@@ -1,6 +1,6 @@
 Proyecto Siete y medio
 
-El proyecto requiere que tengas Python 3 instalado y abrir el archivo .py que contiene la carpeta.
+El proyecto requiere que tengas Python 3 instalado, la libreria pymysql, conectar a la base de datos y abrir el archivo .py que contiene la carpeta.
 
 Información de los Autores:
 
